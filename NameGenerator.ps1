@@ -1,12 +1,12 @@
-$Vorname=Get-Content -path "Vornamen.txt"
-$Nachname=Get-Content -path "Nachnamen.txt"
+$Firstname=Get-Content -path "Firstname.txt"
+$Surname=Get-Content -path "Surname.txt"
 $Used=Get-Content -Path "used.txt"
 $UsedFull=Get-Content -Path "usedFull.txt"
 Clear-Content -Path "possibleFull.txt"
-foreach ($v in $Vorname){foreach ($n in $Nachname){Add-Content -path "possibleFull.txt" "$v $n"}}
+foreach ($v in $Firstname){foreach ($n in $Surname){Add-Content -path "possibleFull.txt" "$v $n"}}
 $PossibleFull=Get-Content -Path "possibleFull.txt"
 function diffV {
-    $diffV= $Vorname | Where {$Used -notcontains $_}
+    $diffV= $Firstname | Where {$Used -notcontains $_}
     return $diffV
 }
 
@@ -15,13 +15,13 @@ function diffF{
     return $diffF
 }
 function Surname{
-    $diffVorname = diffV
-    if ($diffVorname.length -eq 0){
-            Write-Host "`nAlle Namen bereits verwendet!`n" -ForegroundColor "Red"
+    $diffFirstname = diffV
+    if ($diffFirstname.length -eq 0){
+            Write-Host "`nAll Names already used!`n" -ForegroundColor "Red"
             return
         }
         else {
-            $genName = Get-Random -InputObject $diffVorname
+            $genName = Get-Random -InputObject $diffFirstname
         }
     Add-Content -Path "used.txt" "$genName"
     write-Host "`n$genName`n" -ForegroundColor "DarkYellow"
@@ -30,7 +30,7 @@ function Surname{
 function Fullname{
     $diffFull= diffF
     if ($diffFull.length -eq 0){            
-        Write-Host "`nAlle Namen bereits verwendet!`n" -ForegroundColor "Red" 
+        Write-Host "`nAll Names already used!`n" -ForegroundColor "Red" 
         return
     }
 
@@ -42,10 +42,10 @@ function Fullname{
 }
 
 Write-Host "Semi-Random Name Generator"
-function Auswahl{
-    $Auswahl=Read-Host -Prompt "Bitte Waehle eine Option`n1) Vorname`n2) Vor- & Nachname`n0) Ende"
+function Choose{
+    $Choose=Read-Host -Prompt "Please pick an option`n1) Firstname`n2) First- & Surname`n0) Ende"
     
-    switch ($Auswahl){
+    switch ($Choose){
         1 {Surname}
         2 {Fullname}
         0 {exit}
@@ -54,7 +54,7 @@ function Auswahl{
     }
     
     while ($true){
-        Auswahl
+        Choose
         $Used=Get-Content -Path "used.txt"
         $UsedFull=Get-Content -Path "usedFull.txt"
     }
