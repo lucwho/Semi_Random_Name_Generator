@@ -6,12 +6,7 @@ The same can be used for combined Names (Surname and Familiy Name).
 
 ## How to use:
 
-simply download the script, place it in a folder and create following .txt files
-  - Surname.txt
-  - possibleFull.txt
-  - used.txt
-  - usedFull.txt
-  - Firstname.txt
+simply download the script, place it in a folder and run it for the first time. After that, the script will create all necessary files in the folder.
   
-If you have done that, fill Names in the files firstname and Surname. After that you can run the code and get your Names. 
+If you have done that, fill Names in the files firstname.txt and Surname.txt. After that you can run the code and get your Names. 
 Have fun!
