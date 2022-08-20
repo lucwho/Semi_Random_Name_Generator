@@ -14,17 +14,20 @@ $UsedFull=Get-Content -Path "usedFull.txt"
 $PossibleFull=Get-Content -Path "possibleFull.txt"
 #Create all possible Name combinations
 function CreatePF{
-    $Result = [System.Windows.Forms.MessageBox]::Show("Generate PossibleFull.txt?`nThe Generation can take a while.","Generate PossibleFull.txt",4,"Information")
+    $combinations=$Firstname.length*$Surname.Length
+    $Result = [System.Windows.Forms.MessageBox]::Show("Generate PossibleFull.txt?`nThe Generation can take a while.`nAmount of Names to generate: $combinations","Generate PossibleFull.txt",4,"Information")
     if ($Result -eq "Yes") {
         $Firstname=Get-Content -path "Firstname.txt"
         $Surname=Get-Content -path "Surname.txt"
         $i=0
-        Clear-Content -Path "possibleFull.txt"
         foreach ($v in $Firstname){
             foreach ($n in $Surname){
+                $f="$v $n"
                 $i++
-                Write-Progress -Activity "Creating Possible Name Combinations..." -PercentComplete (($i*100)/($Firstname.length*$Surname.Length)) -Status "Name: $v $n"
-                Add-Content -path "possibleFull.txt" "$v $n"
+                if ($PossibleFull -notcontains $f){
+                    Write-Progress -Activity "Creating Possible Name Combinations..." -PercentComplete (($i*100)/($Firstname.length*$Surname.Length)) -Status "Name: $f"
+                    Add-Content -path "possibleFull.txt" "$f"
+                }
             }
         }
         $PossibleFull=Get-Content -Path "possibleFull.txt"
