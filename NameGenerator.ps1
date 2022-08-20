@@ -11,20 +11,24 @@ $Firstname=Get-Content -path "Firstname.txt"
 $Surname=Get-Content -path "Surname.txt"
 $Used=Get-Content -Path "used.txt"
 $UsedFull=Get-Content -Path "usedFull.txt"
-
+$PossibleFull=Get-Content -Path "possibleFull.txt"
 #Create all possible Name combinations
-$Result = [System.Windows.Forms.MessageBox]::Show("Generate PossibleFull.txt?`nThe Generation can take a while.","Generate PossibleFull.txt",4,"Information")
-if ($Result -eq "Yes") {
-    $i=0
-    Clear-Content -Path "possibleFull.txt"
-    foreach ($v in $Firstname){
-        foreach ($n in $Surname){
-            $i++
-            Write-Progress -Activity "Creating Possible Name Combinations..." -PercentComplete (($i*100)/($Firstname.length*$Surname.Length)) -Status "Name: $v $n"
-            Add-Content -path "possibleFull.txt" "$v $n"
+function CreatePF{
+    $Result = [System.Windows.Forms.MessageBox]::Show("Generate PossibleFull.txt?`nThe Generation can take a while.","Generate PossibleFull.txt",4,"Information")
+    if ($Result -eq "Yes") {
+        $Firstname=Get-Content -path "Firstname.txt"
+        $Surname=Get-Content -path "Surname.txt"
+        $i=0
+        Clear-Content -Path "possibleFull.txt"
+        foreach ($v in $Firstname){
+            foreach ($n in $Surname){
+                $i++
+                Write-Progress -Activity "Creating Possible Name Combinations..." -PercentComplete (($i*100)/($Firstname.length*$Surname.Length)) -Status "Name: $v $n"
+                Add-Content -path "possibleFull.txt" "$v $n"
+            }
         }
+        $PossibleFull=Get-Content -Path "possibleFull.txt"
     }
-    $PossibleFull=Get-Content -Path "possibleFull.txt"
 }
 
 #Create a list of items, which differ from the already used firstname list
@@ -175,12 +179,8 @@ $mainToolStrip = New-Object System.Windows.Forms.ToolStrip
 $menuFile = New-Object System.Windows.Forms.ToolStripMenuItem
 $menuExit = New-Object System.Windows.Forms.ToolStripMenuItem
 $menuLists = New-Object System.Windows.Forms.ToolStripMenuItem
-$toolStripExit = New-Object System.Windows.Forms.ToolStripButton
-$toolStripLists = New-Object System.Windows.Forms.ToolStripButton
-
 $main_form.MainMenuStrip = $menuMain
 $main_form.Controls.Add($menuMain)
-[void]$mainForm.Controls.Add($mainToolStrip)
 # Show Menu Bar
 [void]$main_Form.Controls.Add($menuMain)
 # Menu: File
@@ -188,8 +188,8 @@ $menuFile.Text = "File"
 [void]$menuMain.Items.Add($menuFile)
 
 # Menu: File -> Open
-$menuLists.Text         = "Edit Lists"
-$menuLists.Add_Click({editLists})
+$menuLists.Text = "Edit Lists"
+$menuLists.Add_Click({editLists;CreatePF})
 [void]$menuFile.DropDownItems.Add($menuLists)
 # Menu: File -> Save
 $menuExit.Text = "Exit"
@@ -197,6 +197,7 @@ $menuExit.Add_Click({$main_form.Close()})
 [void]$menuFile.DropDownItems.Add($menuExit)
 # Menu: File -> Exit
 #{[System.Windows.Forms.MessageBox]::Show( "This Feature will be coming soon", "Script completed", "OK", "Information" )}
+CreatePF
 $main_form.ShowDialog()
 
 
